@@ -11,6 +11,9 @@
   "scripts":{
     "start": "node server.js"
   },
+  "engines": {
+    "node": "v16.15.0"
+  },
   "devDependencies": {
     "nodemon": "^2.0.22"
   }
