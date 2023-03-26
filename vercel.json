@@ -1,23 +1,19 @@
 {
   "version": 2,
-  "builds": [
-    { "src": "server.js", "use": "@vercel/node" }
-  ],
-  "routes": [
-    { "src": "/(.*)", "dest": "server.js" }
-  ],
   "env": {
     "UPLOAD_DIR": "/DataBasesImages/",
     "MONGO_URI": "mongodb+srv://rozan:cluster0.rozan@cluster0.dqpcacg.mongodb.net/?retryWrites=true&w=majority"
   },
-  "build": {
-    "env": {
-      "UPLOAD_DIR": "/DataBasesImages/",
-      "MONGO_URI": "mongodb+srv://rozan:cluster0.rozan@cluster0.dqpcacg.mongodb.net/?retryWrites=true&w=majority"
-    },
-    "commands": {
-      "set_permissions": "chmod -R 777 $UPLOAD_DIR",
-      "build": "node server.js"
+  "functions": {
+    "api/*": {
+      "memory": 512,
+      "runtime": "@vercel/node-server"
     }
+  },
+  "routes": [
+    { "src": "/(.*)", "dest": "api/$1" }
+  ],
+  "hooks": {
+    "build:post": "chmod -R 777 $UPLOAD_DIR"
   }
 }
