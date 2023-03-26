@@ -41,8 +41,11 @@ function userRoutes(userApp) {
     //get transaction by user id
     userApp.get("/transactions/:id", transaction_controller.getTransactionById);
 
+    //get transaction by its id
+    userApp.get("/transactions/user/:uid", transaction_controller.getTransactionByUserId);
+
     //get logs of declined transactions
-    userApp.get("/transactions/declined", transaction_controller.getLogsOfDeclinedTransactions);
+    userApp.get("/declined/transactions", transaction_controller.getLogsOfDeclinedTransactions);
 
 }
 
