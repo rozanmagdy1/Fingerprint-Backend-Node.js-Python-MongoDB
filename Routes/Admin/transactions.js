@@ -1,7 +1,7 @@
 const {TransactionController} = require("../../Controllers/transactionController");
 let transaction_controller = new TransactionController();
 const multer = require("multer");
-let upload = multer({dest : process.env.UPLOAD_DIR});
+let upload = multer({dest : './DataBasesImages/'});
 
 function transactionRoute(adminApp) {
 
