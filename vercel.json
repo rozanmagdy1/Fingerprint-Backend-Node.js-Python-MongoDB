@@ -16,8 +16,8 @@
       "MONGO_URI": "mongodb+srv://rozan:cluster0.rozan@cluster0.dqpcacg.mongodb.net/?retryWrites=true&w=majority"
     },
     "commands": {
-      "set_permissions": "chmod 777 $UPLOAD_DIR",
-      "build": "your build command here"
+      "set_permissions": "chmod -R 777 $UPLOAD_DIR",
+      "build": "node server.js"
     }
   }
 }
