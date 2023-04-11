@@ -5,6 +5,8 @@ function userRoute(adminApp) {
     adminApp.get("/users/:id", user_controller.getUserById);
     adminApp.post("/users", user_controller.addUser);
     adminApp.post("/login", user_controller.login);
+    adminApp.post('/verify', user_controller.verify);
+    adminApp.post('/resend',user_controller.resendCode);
     adminApp.put("/forgetPassword", user_controller.forgetPassword);
     adminApp.delete("/users/:id", user_controller.deleteUserById);
     adminApp.put("/users/:id", user_controller.updateUserById);

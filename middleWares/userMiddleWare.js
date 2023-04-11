@@ -5,7 +5,7 @@ const users = new UsersModel();
 
 async function UserMiddleWare(req, res, next) {
 
-    if(req.path == '/login'){
+    if(req.path == '/login'|| '/verify' || '/resend'){
         next();
     }else {
         try {

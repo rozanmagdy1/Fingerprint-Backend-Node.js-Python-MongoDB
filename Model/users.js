@@ -1,28 +1,33 @@
 let dataBaseName = "systemDB";
-let collectionName = "users";
+let collection1Name = "users";
+let collection2Name = "logs";
 const {find, insertOne, findOne, deleteOne, updateOneByQuery} = require("../DB/Db");
 const {ObjectId} = require("mongodb");
 
 class UsersModel {
     async getAllUsers(){
-        return await find(dataBaseName, collectionName);
+        return await find(dataBaseName, collection1Name);
     }
 
     async getUser(filter){
-        return await findOne(dataBaseName, collectionName, filter);
+        return await findOne(dataBaseName, collection1Name, filter);
     }
 
     async addUser(data){
-        return await insertOne(dataBaseName, collectionName,data);
+        return await insertOne(dataBaseName, collection1Name,data);
 
     }
 
     async updateUser(filter , data){
-        return await updateOneByQuery(dataBaseName,collectionName, filter, data);
+        return await updateOneByQuery(dataBaseName,collection1Name, filter, data);
     }
 
     async deleteUser(id){
-        return await deleteOne(dataBaseName,collectionName,{_id: ObjectId(id)});
+        return await deleteOne(dataBaseName,collection1Name,{_id: ObjectId(id)});
+    }
+
+    async saveLoginLogs(data){
+        return await insertOne(dataBaseName, collection2Name,data);
     }
 }
 module.exports = {

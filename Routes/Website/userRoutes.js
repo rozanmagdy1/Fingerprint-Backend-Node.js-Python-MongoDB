@@ -9,6 +9,8 @@ let upload = multer({dest : './DataBasesImages/'});
 
 function userRoutes(userApp) {
     userApp.post("/login", user_controller.login);
+    userApp.post('/verify', user_controller.verify);
+    userApp.post('/resend',user_controller.resendCode);
 
     //{transaction1}
     userApp.post(

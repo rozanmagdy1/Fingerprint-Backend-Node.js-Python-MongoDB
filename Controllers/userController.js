@@ -4,135 +4,177 @@ let service = new UserService();
 class UserController {
     async getAllUsers(req, res) {
         let result = await service.listAllUsers();
-        if(result === null){
+        if (result === null) {
             res.json({
-                message : "there is error to list all user"
+                message: "there is error to list all user"
             })
-        }else {
+        } else {
             res.json({
-                "users" : result
+                "users": result
             })
         }
     }
+
     async getUserById(req, res) {
         let id = req.params.id;
         let result = await service.getUserById(id);
-        if(result === null){
+        if (result === null) {
             res.status(404).json({
-                message : "there is no user found!"
+                message: "there is no user found!"
             })
-        }else {
+        } else {
             res.json({
-                "user" : result
+                "user": result
             })
         }
     }
+
     async addUser(req, res) {
         let {username, password, firstname, lastname, age, gender, address, phone} = req.body;
         let result = await service.addUser(
             username, password, firstname, lastname, age, gender, address, phone);
 
-        if(result === "the username already exists use another one!"){
+        if (result === "the username already exists use another one!") {
             res.json({
-                message : "the username already exists use another one!"
+                message: "the username already exists use another one!"
             })
-        }else if(result === null){
+        } else if (result === null) {
             res.json({
-                message : "the user creation fail please enter correct data!"
+                message: "the user creation fail please enter correct data!"
             })
-        }else if(result === "there is error in insert user national id is redundant"){
+        } else if (result === "there is error in insert user national id is redundant") {
             res.json({
-                message : "there is error in insert user national id is redundant"
+                message: "there is error in insert user national id is redundant"
             })
         } else {
             res.json({
-                message : "the user created successfully"
+                message: "the user created successfully"
             })
         }
     }
+
     async login(req, res) {
         let {username, password} = req.body;
         let result = await service.login(username, password);
-        if(result === null){
+        if (result === null) {
             res.json({
-                message : "login fail try another time"
+                message: "login fail try another time"
             })
-        }else if(result.message === "user not found"){
+        } else if (result.message === "user not found") {
             res.status(404).json({
-                message : "user not found"
+                message: "user not found"
             })
-        }else if(result.message === "password wrong"){
+        } else if (result.message === "password wrong") {
             res.json({
-                message : "password wrong try another time!"
+                message: "password wrong try another time!"
             })
-        }else if(result.message === "user not active"){
+        } else if (result.message === "user not active") {
             res.json({
-                message : "the user cannot login because he is deactivated"
+                message: "the user cannot login because he is deactivated"
             })
-        }
-        else{
+        } else {
             res.json({
-                message :"login successfully",
                 result
             })
         }
     }
+
+    async verify(req, res) {
+        let code = req.body;
+        let token = req.headers["authorization"];
+        let result = await service.verify(token, code);
+        if (result === null) {
+            res.json({
+                result: "fail verification, Code is invalid or has expired.",
+            })
+        } else {
+            if (result.message === "Code is valid and matches the email.") {
+                res.json({
+                    message: "login successfully",
+                    result: {
+                        verification: "Successful",
+                        loginToken: result.loginToken,
+                        username: result.username,
+                        userId: result.userId,
+                    }
+                })
+            } else {
+                res.json({
+                    result: "fail verification, Code is invalid or has expired.",
+                })
+            }
+        }
+    }
+
+    async resendCode(req, res) {
+        let username = req.body;
+        let result = await service.resendCode(username);
+        res.json({
+            result: result,
+        })
+    }
+
     async forgetPassword(req, res) {
         let username = req.body.username;
         let newPassword = req.body.newPassword;
-        let result = await service.forgetPassword(username,newPassword);
-        if(result === null){
+        let result = await service.forgetPassword(username, newPassword);
+        if (result === null) {
             res.status(404).json({
-                message : "The user not found"
+                message: "The user not found"
             })
-        }else{
+        } else {
             res.json({
-                "message" : "the password reset successfully",
-                "user" : result
+                "message": "the password reset successfully",
+                "user": result
             })
         }
     }
+
     async deleteUserById(req, res) {
         let id = req.params.id;
         let result = await service.deleteUserById(id);
-        if(result === null){
+        if (result === null) {
             res.status(404).json({
-                message : "The user not found"
+                message: "The user not found"
             })
-        }else{
+        } else {
             res.json({
-                message : "The user deleted successfully"
+                message: "The user deleted successfully"
             })
         }
     }
+
     async updateUserById(req, res) {
         let id = req.params.id;
         let data = req.body;
-        let result = await service.updateUserById(id,data);
-        if(result === null){
+        let result = await service.updateUserById(id, data);
+        if (result === null) {
             res.status(404).json({
-                message : "The user not found"
+                message: "The user not found"
             })
-        }else{
+        } else {
             res.json({
-                message : "The user updated successfully"
+                message: "The user updated successfully"
             })
         }
     }
-    async changeUserStatusById(req,res) {
+
+    async changeUserStatusById(req, res) {
         let id = req.params.id;
         let result = await service.changeUserStatus(id);
-        if(result === null){
+        if (result === null) {
             res.status(404).json({
-                message : "user not found"
+                message: "user not found"
             })
-        }else{
+        } else {
             res.json({
-                message : "user status changed"
+                message: "user status changed"
             })
         }
     }
+
 }
+
 module.exports = {
     UserController
 };
