@@ -10,6 +10,5 @@
   "env": {
     "MONGO_URI": "mongodb+srv://rozan:cluster0.rozan@cluster0.dqpcacg.mongodb.net/?retryWrites=true&w=majority",
     "PYTHONUNBUFFERED":"true"
-  
   }
 }
