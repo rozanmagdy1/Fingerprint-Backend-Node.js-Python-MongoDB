@@ -1,14 +1,18 @@
 {
-  "version":2,
+  "version": 2,
   "builds": [
     { "src": "server.js", "use": "@vercel/node" },
-    { "src": "api/**", "use": "@vercel/python" }
+    { "src": "python/pipline1.py", "use": "@vercel/python" },
+    { "src": "python/pipline2.py", "use": "@vercel/python" },
+    { "src": "python/pipline3.py", "use": "@vercel/python" }
   ],
   "routes": [
-    { "src": "/(.*)", "dest": "/server.js" }
+    { "src": "/(.*)", "dest": "/server.js" },
+    { "src": "/(.*)", "dest": "/python/pipline1.py" },
+    { "src": "/(.*)", "dest": "/python/pipline2.py" },
+    { "src": "/(.*)", "dest": "/python/pipline3.py" }
   ],
   "env": {
-    "MONGO_URI": "mongodb+srv://rozan:cluster0.rozan@cluster0.dqpcacg.mongodb.net/?retryWrites=true&w=majority",
-    "PYTHONUNBUFFERED":"true"
+    "MONGO_URI": "mongodb+srv://rozan:cluster0.rozan@cluster0.dqpcacg.mongodb.net/?retryWrites=true&w=majority"
   }
 }
