@@ -6,7 +6,7 @@ const users = new UsersModel();
 
 async function AdminMiddleWare(req, res, next) {
 
-    if(req.path == '/login'|| '/verify' || '/resend'){
+    if(req.path == '/login'|| req.path =='/verify' || req.path =='/resend'){
         next();
     }else {
         try {
