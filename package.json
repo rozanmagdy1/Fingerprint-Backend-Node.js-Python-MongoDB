@@ -11,5 +11,11 @@
     "nodemailer": "^6.9.1",
     "nodemailer-sendgrid-transport": "^0.2.0",
     "run-parallel": "^1.2.0"
+  },
+  "scripts": {
+    "node":"v16.15.0"
+  },
+  "devDependencies": {
+    "nodemon":"^2.0.22"
   }
 }
