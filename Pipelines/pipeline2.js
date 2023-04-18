@@ -11,6 +11,12 @@ class Pipeline2 {
                 result = JSON.parse(result)
                 resolve(result)
             });
+            childPython.stderr.on('data', (data) => {
+                console.error(`stdout: ${data}`)
+            });
+            childPython.stderr.on('close', (code) => {
+                console.error(`child process exited by code: ${code}`)
+            });
         })
     }
 }

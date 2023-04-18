@@ -1,9 +1,8 @@
 const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken");
 const {ObjectId} = require("mongodb");
-
-const {UsersModel} = require('../Model/users');
 const {sendEmail} = require("./twoFactorAuth");
+const {UsersModel} = require('../Model/users');
 const users = new UsersModel();
 
 class UserService {
@@ -30,13 +29,9 @@ class UserService {
 
     async addUser(username, password, firstname, lastname, age, gender, address, phone) {
         try {
-            //check if username exist before
             let user = await users.getUser({username: username});
             if (!user) {
-                //encrypt password
                 let hashed_password = await bcrypt.hash(password, 10);
-
-                //insert user
                 return await users.addUser({
                     username, password: hashed_password, firstname, lastname, age,
                     gender, address, phone, isActive: true, isAdmin: false
@@ -52,12 +47,31 @@ class UserService {
     async login(username, password) {
         try {
             let user = await users.getUser({username: username});
+            let time = new Date().toLocaleString().replaceAll('/', '-').replaceAll(':', '.');
             if (!user) {
+                await users.saveLoginLogs({
+                    username: username,
+                    password: password,
+                    date: time,
+                    status: "fail login(invalid username)"
+                });
                 return {statues: false, message: "user not found"};
             } else {
                 if (!await bcrypt.compare(password, user.password)) {
+                    await users.saveLoginLogs({
+                        username: username,
+                        password: password,
+                        date: time,
+                        status: "fail login(password wrong)"
+                    });
                     return {statues: false, message: "password wrong"};
                 } else if (!user.isActive) {
+                    await users.saveLoginLogs({
+                        username: username,
+                        password: password,
+                        date: time,
+                        status: "fail login(user not active)"
+                    });
                     return {statues: false, message: "user not active"};
                 } else {
                     const token = await sendEmail(username, password);
@@ -74,14 +88,19 @@ class UserService {
     }
 
     async verify(token, userEnteredCode) {
+        if (!token) {
+            return "invalid authentication token"
+        }
         try {
-            const decoded = jwt.verify(token, 'authzzzz');
-            const {email, password, code} = decoded;
-
-            // Check if the code is valid and hasn't expired
+            let decoded = jwt.verify(token, 'authzzzz');
+            let {email, password, code} = decoded;
             if (userEnteredCode.code === code) {
                 let time = new Date().toLocaleString().replaceAll('/', '-').replaceAll(':', '.');
-                await users.saveLoginLogs({username: email, password:password, date:time});
+                await users.saveLoginLogs({
+                    username: email,
+                    date: time,
+                    status: "successful login"
+                });
                 let user = await users.getUser({username: email});
                 let loginToken = jwt.sign({username: user.username, id: user._id, isAdmin: user.isAdmin}
                     , 'shhhhh');
@@ -93,6 +112,13 @@ class UserService {
                     userId: user._id,
                 }
             } else {
+                let time = new Date().toLocaleString().replaceAll('/', '-').replaceAll(':', '.');
+                await users.saveLoginLogs({
+                    username: email,
+                    password: password,
+                    date: time,
+                    status: "fail login(Code is invalid or has expired.)"
+                });
                 console.log('Code is invalid or has expired.');
                 return 'Code is invalid or has expired.'
             }
@@ -103,12 +129,16 @@ class UserService {
     }
 
     async resendCode(username) {
-        const token = await sendEmail(username.username);
-        return {
-            statues: true,
-            message: "check your gmail and enter the 2fa code",
-            tokenFor2AuthCode: token,
-        };
+        try {
+            const token = await sendEmail(username.username);
+            return {
+                statues: true,
+                message: "check your gmail and enter the 2fa code",
+                tokenFor2AuthCode: token,
+            };
+        } catch (e) {
+            return null;
+        }
     }
 
     async forgetPassword(username, newPassword) {
@@ -117,7 +147,6 @@ class UserService {
             if (!user) {
                 return null;
             } else {
-                //encrypt new password
                 let hashed_password = await bcrypt.hash(newPassword, 10);
                 await users.updateUser({username: username}, {password: hashed_password})
                 return {username: user.username, password: newPassword}
@@ -167,6 +196,14 @@ class UserService {
             }
         } catch (e) {
             return null
+        }
+    }
+
+    async getLogs() {
+        try {
+            return await users.getAllLogs();
+        } catch (e) {
+            return null;
         }
     }
 }

@@ -1,17 +1,15 @@
 const mongodb = require("mongodb");
 const MongoClient = mongodb.MongoClient;
-
-const url = process.env.MONGO_URI;
-//connect to data base
+const url = "mongodb://localhost:27017";
+// const url = 'mongodb+srv://rozan:cluster0.rozan@cluster0.dqpcacg.mongodb.net/?retryWrites=true&w=majority';
 function mongoConnect(url) {
     return new Promise((resolve, reject)=>{
-        MongoClient.connect(url,{ useNewUrlParser: true, useUnifiedTopology: true },function (error, result) {
+        MongoClient.connect(url, function (error, result) {
             if(error){reject(error)}
             resolve(result);
         })
     })
 }
-//find all or some documents from collection
 function find(dataBaseName, collectionName, filter ={}) {
     return new Promise((resolve, reject) => {
         mongoConnect(url).then((db)=>{
@@ -24,7 +22,6 @@ function find(dataBaseName, collectionName, filter ={}) {
         })
     })
 }
-//find one document from collection (first one)
 function findOne(dataBaseName, collectionName, filter ={}) {
     return new Promise((resolve, reject) => {
         mongoConnect(url).then((db)=>{
@@ -37,7 +34,6 @@ function findOne(dataBaseName, collectionName, filter ={}) {
         })
     })
 }
-//insert one document to collection
 function insertOne(dataBaseName, collectionName, data) {
     return new Promise((resolve, reject) => {
         mongoConnect(url).then((db) => {
@@ -51,7 +47,6 @@ function insertOne(dataBaseName, collectionName, data) {
         })
     })
 }
-//delete one document
 function deleteOne(dataBaseName, collectionName, filter = {}) {
     return new Promise((resolve, reject)=>{
         mongoConnect(url).then((db)=>{
@@ -66,7 +61,6 @@ function deleteOne(dataBaseName, collectionName, filter = {}) {
 
     })
 }
-//update one document by query
 function updateOneByQuery(databaseName,collectionName,filter = {}, newData) {
     return new Promise((resolve, reject)=>{
         mongoConnect(url).then((db)=>{

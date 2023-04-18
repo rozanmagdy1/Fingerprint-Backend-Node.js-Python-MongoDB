@@ -2,8 +2,7 @@ let {TransactionService} = require("../Services/transactionService");
 let service = new TransactionService();
 
 class TransactionController {
-
-    transactionOne(req,res) {
+    async transactionOne(req,res) {
         let token = req.headers["authorization"];
         if(req.file === undefined){
             res.json({
@@ -67,7 +66,7 @@ class TransactionController {
             })
         }else{
             let token = req.headers["authorization"];
-            service.transactionTwo(req.user, req.files[0].path, req.files[1].path, token, 2).then((data)=>{
+            service.transactionTwo(req.user,req.files[0].path, req.files[1].path, token, 2).then((data)=>{
                 if(data === null){
                     res.json({
                         message : "their is an error happen!"
@@ -130,11 +129,20 @@ class TransactionController {
     async getTransactionById(req,res) {
         let id = req.params.id;
         let result = await service.getTransactionById(id,req.user);
+        if (result === "relogin please"){
+            res.json({
+                "message" : "relogin please"
+            })
+        }
         if(result === null){
             res.status(404).json({
                 message : "there is no transaction found!"
             })
-        }else {
+        }else if(result === "unauthorized"){
+            res.json({
+                "message" : "unauthorized"
+            })
+        } else {
             res.json({
                 "transaction" : result
             })

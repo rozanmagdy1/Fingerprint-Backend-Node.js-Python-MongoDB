@@ -5,13 +5,12 @@ const citizen = new CitizensModel();
 class CitizenService {
     async getPersonInfoById(id) {
         try {
-            let person = citizen.findPerson({_id: ObjectId(id)});
+            let person = await citizen.findPerson({_id: ObjectId(id)});
             if(!person){
                 return null
             }else{
                 return person
             }
-
         }catch (e) {
             return null;
         }

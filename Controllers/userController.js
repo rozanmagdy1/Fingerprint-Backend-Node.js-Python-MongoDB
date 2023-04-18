@@ -6,7 +6,7 @@ class UserController {
         let result = await service.listAllUsers();
         if (result === null) {
             res.json({
-                message: "there is error to list all user"
+                message: "There is error to list all user"
             })
         } else {
             res.json({
@@ -42,11 +42,7 @@ class UserController {
             res.json({
                 message: "the user creation fail please enter correct data!"
             })
-        } else if (result === "there is error in insert user national id is redundant") {
-            res.json({
-                message: "there is error in insert user national id is redundant"
-            })
-        } else {
+        }else {
             res.json({
                 message: "the user created successfully"
             })
@@ -109,9 +105,15 @@ class UserController {
     async resendCode(req, res) {
         let username = req.body;
         let result = await service.resendCode(username);
-        res.json({
-            result: result,
-        })
+        if (result === null){
+            res.json({
+                message: "their is error in resending code!",
+            })
+        }else{
+            res.json({
+                result: result,
+            })
+        }
     }
 
     async forgetPassword(req, res) {
@@ -173,6 +175,18 @@ class UserController {
         }
     }
 
+    async getLogs(req, res) {
+        let result = await service.getLogs();
+        if (result === null) {
+            res.json({
+                message: "There is error to list all login logs"
+            })
+        } else {
+            res.json({
+                "loginLogs": result
+            })
+        }
+    }
 }
 
 module.exports = {

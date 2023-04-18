@@ -11,6 +11,7 @@ function userRoute(adminApp) {
     adminApp.delete("/users/:id", user_controller.deleteUserById);
     adminApp.put("/users/:id", user_controller.updateUserById);
     adminApp.put("/status/users/:id", user_controller.changeUserStatusById);
+    adminApp.get("/login/logs", user_controller.getLogs);
 }
 module.exports = {
     userRoute

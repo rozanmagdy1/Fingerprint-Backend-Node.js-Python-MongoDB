@@ -14,11 +14,11 @@ class TransactionsModel {
     }
 
     saveTransaction(data) {
-        insertOne(dataBaseName, collectionName, data);
+          insertOne(dataBaseName, collectionName, data);
     }
 
     saveTempTransaction(data) {
-        insertOne(dataBaseName, tempCollection, data);
+          insertOne(dataBaseName, tempCollection, data);
     }
 
     async getAllTransactions() {
