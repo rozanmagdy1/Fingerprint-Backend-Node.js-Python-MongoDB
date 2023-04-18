@@ -7,7 +7,7 @@
     { "src": "/(.*)", "dest": "/server.js" }
   ],
   "env": {
-    "MONGO_URI": "mongodb+srv://rozan:cluster0.rozan@cluster0.dqpcacg.mongodb.net/?retryWrites=true&w=majority",
+    "MONGO_URI": "mongodb://localhost:27017",
     "PYTHONUNBUFFERED":"true"
   }
 }
