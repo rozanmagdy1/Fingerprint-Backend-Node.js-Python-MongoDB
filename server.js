@@ -19,7 +19,7 @@ app.use(bodyParser.urlencoded({extended:false}));
 app.use("/admin", AdminMiddleWare, adminApp);
 app.use("/website", UserMiddleWare,userApp);
 
-const port = 8080;
+const port = process.env.PORT || 8080;
 app.listen(port, function (){
     console.log(`running on http://localhost:${port}`)
 });
