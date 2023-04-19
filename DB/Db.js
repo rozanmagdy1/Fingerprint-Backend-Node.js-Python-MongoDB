@@ -5,7 +5,7 @@ const url = 'mongodb+srv://rozan:cluster0.rozan@cluster0.dqpcacg.mongodb.net/?re
 //let url = process.env.MONGO_URI;
 function mongoConnect(url) {
     return new Promise((resolve, reject)=>{
-        MongoClient.connect(url,function (error, result) {
+        MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true },function (error, result) {
             if(error){reject(error)}
             resolve(result);
         })
