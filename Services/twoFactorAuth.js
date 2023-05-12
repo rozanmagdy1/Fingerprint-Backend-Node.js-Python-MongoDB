@@ -20,7 +20,7 @@ async function sendEmail(email,password) {
     const transporter = nodemailer.createTransport(sendGridTransport({
         service: 'gmail',
         auth: {
-            api_key: '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'
+            api_key: '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'
         }
     }));
 
@@ -28,7 +28,7 @@ async function sendEmail(email,password) {
     token = jwt.sign({email,password, code}, 'authzzzz', {expiresIn: '60s'});
     if(ipAddress){
          mailOptions = {
-            from: 'dcdgraduationproject@gmail.com',
+            from: 'rozanmagdy1@gmail.com',
             to: email,
             subject: 'Website Sign In Alert',
             html:
