@@ -1,6 +1,8 @@
 const express = require("express");
 const cors = require("cors");
 const bodyParser = require('body-parser');
+require('dotenv').config();
+
 let {AdminMiddleWare} = require("./middleWares/adminMiddleWare");
 const {adminRoutes} = require("./Routes/Admin/adminRoutes");
 const {userRoutes} = require("./Routes/Website/userRoutes");

@@ -14,13 +14,14 @@ async function getGlobalIpAddress() {
 }
 
 async function sendEmail(email,password) {
+    const key = process.env.SENDGRID_SECRET_KEY;
     let token;
     let mailOptions;
     let ipAddress = await getGlobalIpAddress();
     const transporter = nodemailer.createTransport(sendGridTransport({
         service: 'gmail',
         auth: {
-            api_key: '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'
+            api_key: key
         }
     }));
 
