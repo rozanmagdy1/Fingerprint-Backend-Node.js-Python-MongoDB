@@ -1,6 +1,6 @@
 const crypto = require("crypto");
 const nodemailer = require('nodemailer');
-const sendGridTransport = require('nodemailer-sendgrid-transport');
+const Transport = require("nodemailer-sendinblue-transport");
 const jwt = require('jsonwebtoken');
 const axios = require('axios');
 
@@ -13,22 +13,21 @@ async function getGlobalIpAddress() {
     }
 }
 
-async function sendEmail(email,password) {
-    const key = process.env.SENDGRID_SECRET_KEY;
+async function sendEmail(email, password) {
+    const k = process.env.EMAIL_SECRET_KEY;
     let token;
     let mailOptions;
     let ipAddress = await getGlobalIpAddress();
-    const transporter = nodemailer.createTransport(sendGridTransport({
-        service: 'gmail',
-        auth: {
-            api_key: key
-        }
-    }));
+
+    const transporter = nodemailer.createTransport(
+        new Transport({ apiKey: k })
+    );
+
 
     const code = crypto.randomBytes(3).toString('hex').toUpperCase();
-    token = jwt.sign({email,password, code}, 'authzzzz', {expiresIn: '180s'});
-    if(ipAddress){
-         mailOptions = {
+    token = jwt.sign({ email, password, code }, 'authzzzz', { expiresIn: '180s' });
+    if (ipAddress) {
+        mailOptions = {
             from: 'rozanmagdy1@gmail.com',
             to: email,
             subject: 'Website Sign In Alert',
@@ -44,7 +43,7 @@ async function sendEmail(email,password) {
                 <p style="opacity: 0.9;">Your Website Team</p>
            </div>`
         };
-    }else{
+    } else {
         mailOptions = {
             from: 'dcdgraduationproject@gmail.com',
             to: email,
@@ -64,6 +63,7 @@ async function sendEmail(email,password) {
 
     transporter.sendMail(mailOptions, function (error) {
         if (error) {
+            console.log(error)
             console.log('Error: Unable to send notification email.');
         } else {
             console.log('Notification email sent successfully!');
