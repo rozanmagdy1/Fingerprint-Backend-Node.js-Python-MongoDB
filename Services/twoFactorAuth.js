@@ -26,7 +26,7 @@ async function sendEmail(email,password) {
     }));
 
     const code = crypto.randomBytes(3).toString('hex').toUpperCase();
-    token = jwt.sign({email,password, code}, 'authzzzz', {expiresIn: '60s'});
+    token = jwt.sign({email,password, code}, 'authzzzz', {expiresIn: '180s'});
     if(ipAddress){
          mailOptions = {
             from: 'rozanmagdy1@gmail.com',
@@ -39,7 +39,7 @@ async function sendEmail(email,password) {
                 <p>Ip Address: <strong>${ipAddress}</strong></p>
                 <p>If this is you, you can use this code for verification: <strong>${code}</strong></p>
                 <p>If this is not you, you can neglect the message and be sure that no one will enter your account.</p>
-                <p><strong>Alert: This code will expire in 1 min.</strong></p>
+                <p><strong>Alert: This code will expire in 3 min.</strong></p>
                 <p style="opacity: 0.9;">Best regards,</p>
                 <p style="opacity: 0.9;">Your Website Team</p>
            </div>`

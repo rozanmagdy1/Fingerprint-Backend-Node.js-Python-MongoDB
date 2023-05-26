@@ -10,7 +10,6 @@ class Pipeline1 {
             childPython.stdout.on('data', (data) => {
                 let result = data.toString();
                 result = JSON.parse(result);
-                // console.log(result)
                 resolve(result);
             });
             childPython.stderr.on('data', (data) => {

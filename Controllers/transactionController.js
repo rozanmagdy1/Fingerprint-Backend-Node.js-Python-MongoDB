@@ -36,7 +36,7 @@ class TransactionController {
             })
         }else{
             let token = req.headers["authorization"];
-            service.transactionOneAndThree(req.user, req.file.path, token, "small",3).then((data)=>{
+            service.transactionOneAndThree(req.user, req.file.path, token, "global",3).then((data)=>{
                 if(data === null){
                     res.json({
                         message : "their is an error happen!"

@@ -1,19 +1,19 @@
 const spawn = require("child_process").spawn;
 const path = require('path');
 const parallel = require('run-parallel')
-const {extractUserNameFromToken, extractUserIdFromToken} = require("../Services/extractInfoFromToken");
-const {TransactionsModel} = require('../Model/transactions');
+const { extractUserNameFromToken, extractUserIdFromToken } = require("../Services/extractInfoFromToken");
+const { TransactionsModel } = require('../Model/transactions');
 const transaction = new TransactionsModel();
-const {CitizensModel} = require('../Model/citizens');
+const { CitizensModel } = require('../Model/citizens');
 const citizen = new CitizensModel();
-const {UsersModel} = require('../Model/users');
+const { UsersModel } = require('../Model/users');
 const users = new UsersModel();
-const {Pipeline1} = require('../Pipelines/pipeline1')
+const { Pipeline1 } = require('../Pipelines/pipeline1')
 const pipeline1 = new Pipeline1();
-const {Pipeline2} = require('../Pipelines/pipeline2')
+const { Pipeline2 } = require('../Pipelines/pipeline2')
 const pipeline2 = new Pipeline2();
-const {Pipeline3} = require('../Pipelines/pipeline3')
-const {ObjectId} = require("mongodb");
+const { Pipeline3 } = require('../Pipelines/pipeline3')
+const { ObjectId } = require("mongodb");
 const pipeline3 = new Pipeline3();
 
 class TransactionService {
@@ -32,9 +32,9 @@ class TransactionService {
 
     static saveInDB(user, result) {
         if (user.isAdmin === true) {
-             transaction.saveTransaction(result);
+            transaction.saveTransaction(result);
         } else {
-             transaction.saveTempTransaction(result);
+            transaction.saveTempTransaction(result);
         }
     }
 
@@ -53,7 +53,7 @@ class TransactionService {
 
                     let image_full_path = path.resolve(`${path_name}.jpg`);
                     image_full_path = image_full_path.replace(/\\[\, \w\.&-]+$/, "");
-                    let part_extracted = image_full_path.substr(0, 41);
+                    let part_extracted = path.dirname(image_full_path);
 
                     if (transaction_no === 1) {
                         result.transactionType = "one{Compare with people have previous crimes}";
@@ -67,18 +67,18 @@ class TransactionService {
                         result.result = "not matched";
                         result.informationEstimated = data;
                         parallel([
-                            ()=>{resolve(result)},
-                            ()=>{TransactionService.saveInDB(user, result)}
+                            () => { resolve(result) },
+                            () => { TransactionService.saveInDB(user, result) }
                         ], function () {
                             console.log("complete successfully")
                         });
                     } else {
                         result.result = "matched";
-                        citizen.findPerson({fingers: data["fileMatched"]}).then((person) => {
+                        citizen.findPerson({ fingers: data["fileMatched"] }).then((person) => {
                             result.PersonMatched = person;
                             parallel([
-                                ()=>{resolve(result)},
-                                ()=>{TransactionService.saveInDB(user, result)}
+                                () => { resolve(result) },
+                                () => { TransactionService.saveInDB(user, result) }
                             ], function () {
                                 console.log("complete successfully")
                             });
@@ -91,7 +91,7 @@ class TransactionService {
         }
     }
 
-    transactionTwo(user,path1, path2, token, transaction_no) {
+    transactionTwo(user, path1, path2, token, transaction_no) {
         let result = {}
         let [username, id] = TransactionService.getUserMakeTransactionInfo(token);
 
@@ -108,10 +108,10 @@ class TransactionService {
                 pipeline2.pipeLineTwo(path1_name, path2_name, spawn).then((data) => {
                     let image1_full_path = path.resolve(`${path1_name}.jpg`);
                     image1_full_path = image1_full_path.replace(/\\[\, \w\.&-]+$/, "");
-                    let part1_extracted = image1_full_path.substr(0, 41);
+                    let part1_extracted = path.dirname(image1_full_path);
                     let image2_full_path = path.resolve(`${path2_name}.jpg`);
                     image2_full_path = image2_full_path.replace(/\\[\, \w\.&-]+$/, "");
-                    let part2_extracted = image2_full_path.substr(0, 41);
+                    let part2_extracted = path.dirname(image2_full_path);
 
                     result.transactionImage1Path = `${part1_extracted}\\DataBasesImages\\TransactionType2\\${path1_name}.jpg`;
                     result.transactionImage2Path = `${part2_extracted}\\DataBasesImages\\TransactionType2\\${path2_name}.jpg`;
@@ -120,8 +120,8 @@ class TransactionService {
                     result.transactionType = "Two{compare image from crime scene with image of suspect person}";
                     result.isMatched = data;
                     parallel([
-                        ()=>{resolve(result)},
-                        ()=>{TransactionService.saveInDB(user, result)}
+                        () => { resolve(result) },
+                        () => { TransactionService.saveInDB(user, result) }
                     ], function () {
                         console.log("complete successfully")
                     });
@@ -144,15 +144,15 @@ class TransactionService {
                 pipeline3.pipeLineThree(path_name, spawn).then((data) => {
                     let image_full_path = path.resolve(`${path_name}.jpg`);
                     image_full_path = image_full_path.replace(/\\[\, \w\.&-]+$/, "");
-                    let part_extracted = image_full_path.substr(0, 41);
+                    let part_extracted = path.dirname(image_full_path);
                     result.transactionImagePath = `${part_extracted}\\DataBasesImages\\TransactionType4\\${path_name}.jpg`;
                     result.user = username;
                     result.userId = id;
                     result.transactionType = "Four{Get Estimated Information's From FingerPrint Like (GENDER , HAND, FINGER)}";
                     result.informationEstimated = data;
                     parallel([
-                        ()=>{resolve(result)},
-                        ()=>{TransactionService.saveInDB(user, result)}
+                        () => { resolve(result) },
+                        () => { TransactionService.saveInDB(user, result) }
                     ], function () {
                         console.log("complete successfully")
                     });
@@ -179,7 +179,7 @@ class TransactionService {
             }
 
             if (user.isAdmin === true) {
-                let Transaction = await transaction.getTransactionByID({_id: ObjectId(id)});
+                let Transaction = await transaction.getTransactionByID({ _id: ObjectId(id) });
                 if (!Transaction) {
                     return null;
                 } else {
@@ -203,7 +203,7 @@ class TransactionService {
 
     async getTransactionByUserId(id) {
         try {
-            let Transactions = await transaction.getTransactionsByUserID({userId: id});
+            let Transactions = await transaction.getTransactionsByUserID({ userId: id });
             if (!Transactions) {
                 return null;
             } else {
@@ -224,7 +224,7 @@ class TransactionService {
 
     async getTransactionNeedToConfirmById(id) {
         try {
-            let Transaction = await transaction.getTransactionNeedToConfirmById({_id: ObjectId(id)});
+            let Transaction = await transaction.getTransactionNeedToConfirmById({ _id: ObjectId(id) });
             if (!Transaction) {
                 return null;
             } else {
@@ -238,7 +238,7 @@ class TransactionService {
     async ConfirmTransaction(token, id, confirm) {
         let [username, user_id] = TransactionService.getUserMakeTransactionInfo(token);
         try {
-            let Transaction = await transaction.getTransactionNeedToConfirmById({_id: ObjectId(id)});
+            let Transaction = await transaction.getTransactionNeedToConfirmById({ _id: ObjectId(id) });
             if (!Transaction) {
                 return null;
             } else {
@@ -248,7 +248,7 @@ class TransactionService {
                     Transaction.confirmationResult = true;
                     Transaction.confirmationTime = time;
                     transaction.saveTransaction(Transaction);
-                    return await transaction.deleteTempTransaction({_id: ObjectId(Transaction._id)});
+                    return await transaction.deleteTempTransaction({ _id: ObjectId(Transaction._id) });
                 } else {
                     Transaction.userRefused = Transaction.user;
                     Transaction.user = username;
@@ -276,7 +276,7 @@ class TransactionService {
                         Transaction.transactionImage2Path = image2_new_path;
                     }
                     transaction.saveTransaction(Transaction);
-                    return await transaction.deleteTempTransaction({_id: ObjectId(Transaction._id)});
+                    return await transaction.deleteTempTransaction({ _id: ObjectId(Transaction._id) });
                 }
             }
         } catch (e) {
