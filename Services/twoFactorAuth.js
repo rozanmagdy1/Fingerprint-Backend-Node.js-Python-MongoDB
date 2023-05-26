@@ -41,23 +41,24 @@ async function sendEmail(email, password) {
                 <p><strong>Alert: This code will expire in 3 min.</strong></p>
                 <p style="opacity: 0.9;">Best regards,</p>
                 <p style="opacity: 0.9;">Your Website Team</p>
-           </div>`
+            </div>`
         };
     } else {
         mailOptions = {
-            from: 'dcdgraduationproject@gmail.com',
+            from: 'rozanmagdy1@gmail.com',
             to: email,
             subject: 'Website Sign In Alert',
             html:
                 `<div style="font-family: Arial, sans-serif; font-size: 16px; line-height: 1.5; color: #333;">
                 <h2 style="text-align: center;">Forensics fingerprint elicitation system</h2>
                 <p style="letter-spacing: 3px;">Did You Log in Now?</p>
+                <p>Ip Address: <strong>${ipAddress}</strong></p>
                 <p>If this is you, you can use this code for verification: <strong>${code}</strong></p>
                 <p>If this is not you, you can neglect the message and be sure that no one will enter your account.</p>
-                <p><strong>Alert: This code will expire in 1 min.</strong></p>
+                <p><strong>Alert: This code will expire in 3 min.</strong></p>
                 <p style="opacity: 0.9;">Best regards,</p>
                 <p style="opacity: 0.9;">Your Website Team</p>
-           </div>`
+            </div>`
         };
     }
 
