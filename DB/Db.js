@@ -1,7 +1,7 @@
 const mongodb = require("mongodb");
 const MongoClient = mongodb.MongoClient;
-// const url = 'mongodb+srv://rozan:cluster0.rozan@cluster0.dqpcacg.mongodb.net/?retryWrites=true&w=majority';
-let url = process.env.MONGO_URI
+const url = 'mongodb://localhost:27017';
+// let url = process.env.MONGO_URI
 function mongoConnect(url) {
     return new Promise((resolve, reject)=>{
         MongoClient.connect(url, function (error, result) {
